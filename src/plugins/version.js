@@ -1,6 +1,7 @@
 'use strict'
 
 const Joi = require('joi')
+const log = require('../log')
 
 const cp = require('child_process')
 const exec = w => cp.execSync(w).toString().replace(/\n/g, '')
@@ -13,17 +14,15 @@ module.exports = {
     format: Joi.string().required()
   }),
   code: (module, config, env, out) => {
-    const ver = {
-      version: require(path.join(out.mainDir, 'package.json')).version,
-      revision: exec('git log --oneline | wc -l'),
-      commit: exec('git rev-parse HEAD | fold -w 6 | head -n 1'),
-      compileTime: Date.now()
-    }
-    env.VERSION = ver.version
-    env.REVISION = ver.revision
-    env.COMMIT = ver.commit
-    env.COMPILE_TIME = ver.compileTime
-    env.TAG = ver.tag = subst(env, config.format)
+    const ver = {}
+
+    env.VERSION = ver.version = require(path.join(out.mainDir, 'package.json')).version
+    env.REVISION = ver.revision = exec('git log --oneline | wc -l')
+    env.COMMIT = ver.commit = exec('git rev-parse HEAD | fold -w 6 | head -n 1')
+    env.COMPILE_TIME = ver.compileTime = Date.now()
+    env.TAG = ver.tag = out.version = subst(env, config.format)
+
+    log.info('Version %s', env.TAG)
 
     out.script.push(`process.moduleVersion = ${JSON.stringify(ver)}`)
   }

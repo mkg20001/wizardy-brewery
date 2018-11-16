@@ -1,6 +1,7 @@
 'use strict'
 
 const Joi = require('joi')
+const log = require('../log')
 
 const pkg = require('pkg')
 const fs = require('fs')
@@ -22,7 +23,9 @@ module.exports = {
     }, [])
 
     out.actions.push(async () => {
-      await pkg(args.concat(['--out-path', out.outPath, out.filePath]))
+      let execArgs = args.concat(['--out-path', out.outPath, out.filePath])
+      log.info('Executing $ pkg %s', execArgs.join(' '))
+      await pkg.exec(execArgs)
     })
 
     out.bundle = {

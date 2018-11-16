@@ -17,7 +17,7 @@ const prefixed = (prefix, fnc) => {
 }
 
 module.exports = {
-  debug: prefixed(chalk.grey('[DEBUG]'), console.log),
+  debug: process.env.DEBUG ? prefixed(chalk.grey('[DEBUG]'), console.log) : () => {},
   info: prefixed(chalk.white.bold('[INFO]'), console.log),
   warn: prefixed(chalk.yellow.bold('[WARN]'), console.error),
   error: prefixed(chalk.red.bold('[ERROR]'), console.error)

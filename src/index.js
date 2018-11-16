@@ -2,6 +2,8 @@
 
 const clone = require('clone')
 const merge = require('merge-recursive').recursive
+const rimraf = require('rimraf').sync
+const mkdirp = require('mkdirp').sync
 
 const plugins = require('./plugins')
 
@@ -15,21 +17,29 @@ module.exports = async function brewery (config, mainDir) {
 
   const modules = Array.isArray(config.modules) ? config.modules.map(mod => merge(clone(config), mod)) : [config]
 
+  const outTpl = {
+    actions: [],
+    script: [],
+    errScript: [],
+    bakePath: path.join(mainDir, 'bake'),
+    outPath: path.join(mainDir, 'prod'),
+    mainDir
+  }
+
+  rimraf(outTpl.bakePath)
+  mkdirp(outTpl.bakePath)
+  rimraf(outTpl.outPath)
+  mkdirp(outTpl.outPath)
+
   for (let i = 0; i < modules.length; i++) {
     const module = modules[i]
 
     log.info('Module %s', module.id)
 
     const env = {}
-    const out = {
-      actions: [],
-      script: [],
-      errScript: [],
-      filePath: path.join(mainDir, 'bake', module.id + '.js'),
-      outPath: path.join(mainDir, 'prod'),
-      entry: path.resolve(mainDir, module.entry),
-      mainDir
-    }
+    const out = clone(outTpl)
+    out.entry = path.resolve(mainDir, module.entry)
+    out.filePath = path.join(mainDir, 'bake', module.id + '.js')
 
     for (let i = 0; i < plugins.length; i++) {
       const plugin = plugins[i]
@@ -58,5 +68,12 @@ module.exports = async function brewery (config, mainDir) {
 
 `
     fs.writeFileSync(out.filePath, tpl)
+    log.info('Written %s', out.filePath)
+
+    for (let i = 0; i < out.actions.length; i++) {
+      const action = out.actions[i]
+      log.debug('action %o/%o', i + 1, out.actions.length)
+      await action()
+    }
   }
 }

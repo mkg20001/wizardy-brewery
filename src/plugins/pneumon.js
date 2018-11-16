@@ -1,6 +1,7 @@
 'use strict'
 
 const Joi = require('joi')
+const log = require('../log')
 
 const cp = require('child_process')
 const exec = w => cp.execSync(w).toString().replace(/\n/g, '')
@@ -17,11 +18,11 @@ module.exports = {
     delete config.ota
     config.name = module.id
 
-    if (!module.version) {
+    if (!out.version) {
       throw new Error('Pneumon mod needs version mod')
     }
 
-    config.version = env.TAG
+    config.version = out.version
 
     if (!out.bundle) {
       throw new Error('Pneumon mod needs bundler')
@@ -58,9 +59,14 @@ module.exports = {
   `)
 
     out.actions.push(async () => {
-      await Promise.all((await out.bundle.files()).map(async (file) => {
-        console.log(await exec(`npx pneumon --file ${JSON.stringify(path.resolve(out.outPath, file))} --out ${JSON.stringify(path.join(out.outPath, file + '.json'))}`))
-      }))
+      let files = await out.bundle.files()
+      for (var i = 0; i < files.length; i++) {
+        let file = files[i]
+
+        const cmd = `npx pneumon --file ${JSON.stringify(path.resolve(out.outPath, file))} --hash --version ${JSON.stringify(out.version)} --out ${JSON.stringify(path.join(out.outPath, file + '.json'))}`
+        log.info('Executing %s', cmd)
+        log.info(await exec(cmd))
+      }
     })
   }
 }
