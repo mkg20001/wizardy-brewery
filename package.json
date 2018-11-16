@@ -1,6 +1,6 @@
 {
   "name": "wizardy-brewery",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Some randomly named tool that does things like generating boilerplate code. Currently not really useful for anyone except me.",
   "main": "src/index.js",
   "bin": {
