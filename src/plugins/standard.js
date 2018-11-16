@@ -3,17 +3,17 @@
 const Joi = require('joi')
 const log = require('../log')
 
-const cp = require('child_process')
-const exec = w => cp.execSync(w).toString().replace(/\n/g, '')
+const fs = require('fs')
+const standard = require('standard')
 
 module.exports = {
   name: 'standard',
   config: Joi.boolean().required(),
   code: (module, config, env, out) => {
     out.actions.push(async () => {
-      let cmd = `standard --fix ${JSON.stringify(out.filePath)}`
-      log.info('Executing $ %s', cmd)
-      exec(cmd)
+      log.info('Standard format %s', out.filePath)
+      const fixed = standard.lintTextSync(String(fs.readFileSync(out.filePath)), {fix: true}).results[0].output
+      fs.writeFileSync(out.filePath, fixed)
     })
   }
 }

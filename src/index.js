@@ -1,7 +1,7 @@
 'use strict'
 
 const clone = require('clone')
-const merge = require('merge-recursive').recursive
+const merge = require('merge').recursive
 const rimraf = require('rimraf').sync
 const mkdirp = require('mkdirp').sync
 
