@@ -3,8 +3,10 @@
 'use strict'
 
 const brewery = require('.')
+const fs = require('fs')
 
-const config = require(process.argv[2])
-const mainDir = require('path').dirname(process.argv[2])
+const confFile = fs.realpathSync(process.argv[2])
+const config = require(confFile)
+const mainDir = require('path').dirname(confFile)
 
 brewery(config, mainDir)
