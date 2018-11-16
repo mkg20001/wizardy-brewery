@@ -2,7 +2,7 @@
   "name": "wizardy-brewery",
   "version": "0.0.1",
   "description": "Some randomly named tool that does things like generating boilerplate code. Currently not really useful for anyone except me.",
-  "main": "src/brewery.js",
+  "main": "src/index.js",
   "bin": {
     "wizardy-brewery": "src/bin.js"
   },
@@ -12,6 +12,10 @@
   "author": "Maciej Krüger <mkg20001@gmail.com>",
   "license": "MPL-2.0",
   "dependencies": {
+    "chalk": "^2.4.1",
+    "clone": "^2.1.2",
+    "joi": "^14.0.6",
+    "merge-recursive": "0.0.3",
     "pkg": "^4.3.4"
   },
   "devDependencies": {},

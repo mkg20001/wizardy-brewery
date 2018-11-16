@@ -8,10 +8,18 @@ const plugins = require('./plugins')
 const fs = require('fs')
 const path = require('path')
 
+const log = require('./log')
+
 module.exports = async function brewery (config, mainDir) {
+  log.info('Brewery v%s', require('../package.json').version)
+
   const modules = Array.isArray(config.modules) ? config.modules.map(mod => merge(clone(config), mod)) : [config]
 
-  const res = await Promise.all(modules.map(async (module) => {
+  for (let i = 0; i < modules.length; i++) {
+    const module = modules[i]
+
+    log.info('Module %s', module.id)
+
     const env = {}
     const out = {
       actions: [],
@@ -23,33 +31,32 @@ module.exports = async function brewery (config, mainDir) {
       mainDir
     }
 
-    for (var i = 0; i < plugins.length; i++) {
-      let plugin = plugins[i]
+    for (let i = 0; i < plugins.length; i++) {
+      const plugin = plugins[i]
 
-      await plugin(module, env, out)
+      if (module[plugin.name]) {
+        log.debug('%s->%s %O', module.id, plugin.name, module[plugin.name])
+        await plugin.code(module, module[plugin.name], env, out)
+      }
     }
 
-    return out
-  }))
-
-  await Promise.all(res.map(async (out) => {
     const tpl = `#!/usr/bin/env node
 
-'use strict'
+'use strict';
 
 /* eslint-disable no-console */
 
 (async () => {
   ${out.script.join('\n')}
-}.then(() => {
+})().then(() => {
   require(${JSON.stringify(out.entry)})
 }, (err) => {
   ${out.errScript.join('\n')}
   console.error(err.stack)
   process.exit(2)
-}))
+})
 
 `
     fs.writeFileSync(out.filePath, tpl)
-  }))
+  }
 }

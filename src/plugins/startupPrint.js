@@ -1,14 +1,15 @@
 'use strict'
 
-const {subst} = require('../utils')
-
-module.exports = (module, config, env, out) => {
-  config.forEach(line => {
-    out.script.push(`console.log(${JSON.stringify(subst(env, line))})`)
-  })
-}
-
 const Joi = require('joi')
 
-module.exports.name = 'startupPrint'
-module.exports.config = Joi.array().required()
+const {subst} = require('../utils')
+
+module.exports = {
+  name: 'startupPrint',
+  config: Joi.array().required(),
+  code: (module, config, env, out) => {
+    config.forEach(line => {
+      out.script.push(`console.log(${JSON.stringify(subst(env, line))})`)
+    })
+  }
+}
