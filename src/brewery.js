@@ -1,0 +1,33 @@
+'use strict'
+
+const clone = require('clone')
+const merge = require('merge-recursive').recursive
+
+const plugins = require('./plugins')
+
+const fs = require('fs')
+const os = require('os')
+const path = require('path')
+
+module.exports = async function brewery (config, mainDir) {
+  const modules = Array.isArray(config.modules) ? config.modules.map(mod => merge(clone(config), mod)) : [config]
+
+  const res = await Promise.all(config.modules.map(async (module) => {
+    const env = {}
+    const out = {
+      actions: [],
+      script: [],
+      filePath: path.join(mainDir, 'bake', module.id + '.js'),
+      outPath: path.join(mainDir, 'prod'),
+      mainDir
+    }
+
+    for (var i = 0; i < plugins.length; i++) {
+      let plugin = plugins[i]
+
+      await plugin(module, env, out)
+    }
+
+    return out
+  }))
+}
