@@ -24,6 +24,7 @@ module.exports = (module, config, env, out) => {
 
 const Joi = require('joi')
 
+module.exports.name = 'version'
 module.exports.config = {
   format: Joi.string().required()
 }

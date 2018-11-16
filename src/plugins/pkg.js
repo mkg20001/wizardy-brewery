@@ -1,6 +1,7 @@
 'use strict'
 
 const pkg = require('pkg')
+const fs = require('fs')
 
 module.exports = (module, config, env, out) => {
   const args = Object.keys(config).reduce((args, key) => {
@@ -18,4 +19,12 @@ module.exports = (module, config, env, out) => {
   out.actions.push(async () => {
     await pkg(args.concat(['--out-path', out.outPath, out.filePath]))
   })
+
+  out.bundle = {
+    getFile: '" + Pneumon.guessPkg("$ID") + "'.replace('$ID', module.id),
+    files: () =>
+      fs.readdirSync(out.outPath).filter(f => f.startsWith(module.id))
+  }
 }
+
+module.exports.name = 'pkg'

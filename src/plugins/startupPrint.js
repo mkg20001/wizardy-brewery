@@ -10,4 +10,5 @@ module.exports = (module, config, env, out) => {
 
 const Joi = require('joi')
 
+module.exports.name = 'startupPrint'
 module.exports.config = Joi.array().required()

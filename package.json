@@ -2,10 +2,25 @@
   "name": "wizardy-brewery",
   "version": "0.0.1",
   "description": "Some randomly named tool that does things like generating boilerplate code. Currently not really useful for anyone except me.",
-  "main": "index.js",
+  "main": "src/brewery.js",
+  "bin": {
+    "wizardy-brewery": "src/bin.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Maciej Krüger <mkg20001@gmail.com>",
-  "license": "MPL-2.0"
+  "license": "MPL-2.0",
+  "dependencies": {
+    "pkg": "^4.3.4"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkg20001/wizardy-brewery.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkg20001/wizardy-brewery/issues"
+  },
+  "homepage": "https://github.com/mkg20001/wizardy-brewery#readme"
 }

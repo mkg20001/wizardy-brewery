@@ -6,6 +6,7 @@ module.exports = (module, config, env, out) => {
 
 const Joi = require('joi')
 
+module.exports.name = 'pneumon'
 module.exports.config = Joi.object().required().keys({
   dsn: Joi.string().required()
 })

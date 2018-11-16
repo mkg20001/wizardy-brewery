@@ -24,7 +24,7 @@ module.exports = (module, config, env, out) => {
 
 const Pneumon = require('pneumon')
 
-const app = global.OTA = Pneumon(${JSON.stringify(config).replace('@PKG', subst(module, '" + Pneumon.guessPkg("$ID") + "'))})
+const app = global.OTA = Pneumon(${JSON.stringify(config).replace('@FILE', out.bundle.getFile)})
 
 if (!await app.isInstalled() || !await app.isRunningAsService()) {
   switch (process.argv.pop()) {
@@ -49,6 +49,12 @@ if (!await app.isInstalled() || !await app.isRunningAsService()) {
 }
 
 `)
+
+  out.actions.push(async () => {
+    await Promise.all((await out.bundle.files()).map(async (file) => {
+      console.log(await exec(`npx pneumon --file ${JSON.stringify(path.resolve(out.outPath, file))} --out ${JSON.stringify(path.join(out.outPath, file + '.json'))}`))
+    }))
+  })
 }
 
 const Joi = require('joi')

@@ -12,4 +12,5 @@ module.exports = (module, config, env, out) => {
 
 const Joi = require('joi')
 
+module.exports.name = 'env'
 module.exports.config = Joi.object().required()
