@@ -51,8 +51,8 @@ module.exports = {
           console.log('Installing...')
           await app.install()
         }
-        console.log('Done!')
     }
+    console.log('Done!')
     process.exit(0) // quit this instance
   }
   `)
@@ -72,7 +72,7 @@ module.exports = {
         let file = files[i]
 
         const cmd = `npx pneumon --file ${JSON.stringify(path.resolve(out.outPath, file))} --hash --version ${JSON.stringify(out.version)} --out ${JSON.stringify(path.join(out.outPath, file + '.json'))}`
-        log.info('Executing %s', cmd)
+        log.info('Executing $ %s', cmd)
         log.info(await exec(cmd))
       }
     })

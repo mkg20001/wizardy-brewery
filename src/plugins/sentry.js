@@ -9,6 +9,6 @@ module.exports = {
   }),
   code: (module, config, env, out) => {
     out.script.push(`const Sentry = require('@sentry/node'); Sentry.init(${JSON.stringify(config)})`)
-    out.errScript.push(`Sentry.captureException(err)`)
+    out.errScript.push(`const Sentry = require('@sentry/node'); Sentry.captureException(err)`)
   }
 }
