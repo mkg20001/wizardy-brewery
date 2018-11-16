@@ -55,8 +55,16 @@ module.exports = {
     }
     process.exit(0) // quit this instance
   }
-
   `)
+
+    if (module.eFlag) {
+      out.script.push(`
+      if (eFlag.get()) {
+        await app.update()
+        eFlag.false()
+      }
+`)
+    }
 
     out.actions.push(async () => {
       let files = await out.bundle.files()
