@@ -57,9 +57,9 @@ module.exports = async function brewery (config, mainDir) {
 /* eslint-disable no-console */
 
 (async () => {
-  ${out.script.join('\n')}
+  ${out.script.join('\n\n')}
 })().then(() => {
-  require(${JSON.stringify(out.entry)})
+  require(${JSON.stringify(path.relative(out.bakePath, out.entry))})
 }, (err) => {
   ${out.errScript.join('\n')}
   console.error(err.stack)
