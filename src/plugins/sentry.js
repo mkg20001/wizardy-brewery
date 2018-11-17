@@ -12,6 +12,7 @@ module.exports = {
       config.release = `${module.id}@${out.version}`
     }
     out.script.push(`const Sentry = global._SENTRY = require('@sentry/node')\n Sentry.init(${JSON.stringify(config)})`)
+    out.script.push(`global.SENTRY = ${JSON.stringify(config)}`)
     out.errScript.push(`global._SENTRY.captureException(err)`)
   }
 }
