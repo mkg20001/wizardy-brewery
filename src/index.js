@@ -15,7 +15,7 @@ const log = require('./log')
 module.exports = async function brewery (config, mainDir) {
   log.info('Brewery v%s', require('../package.json').version)
 
-  const modules = Array.isArray(config.modules) ? config.modules.map(mod => merge(clone(config), mod)) : [config]
+  const modules = Array.isArray(config.modules) ? config.modules.map(mod => Object.assign(clone(config), mod)) : [config]
 
   const outTpl = {
     actions: [],
