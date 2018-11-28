@@ -28,7 +28,10 @@ module.exports = {
       throw new Error('Pneumon mod needs bundler')
     }
 
-    out.script.push(`
+    if (config.justMeta) {
+      delete config.justMeta
+
+      out.script.push(`
 
   const Pneumon = require('pneumon')
 
@@ -55,14 +58,19 @@ module.exports = {
     console.log('Done!')
     process.exit(0) // quit this instance
   }
-  `)
+    `)
 
-    if (module.eFlag) {
-      out.script.push(`
-      if (eFlag.get()) {
-        await app.update()
-        eFlag.false()
+      if (module.eFlag) {
+        out.script.push(`
+        if (eFlag.get()) {
+          await app.update()
+          eFlag.false()
+        }
+  `)
       }
+    } else {
+      out.script.push(`
+  global._PNEUMON = ${JSON.stringify(config).replace('@FILE', out.bundle.getFile)}
 `)
     }
 

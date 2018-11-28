@@ -98,5 +98,6 @@ Pneumon distribution
 This module
 - Accepts a string `pneumon.ota` containing `@FILE` which is later going to be replaced by the code to get the appropriate json metadata (example: set it to `https://your-ota-server.com/@FILE.json`)
 - All other properties get passed to pneumon as-is (except name which gets overriden with the id)
+  - You can also use `justMeta` to just write pneumon metadata and save configuration for pneumon to `global._PNEUMON`
 - Writes pneumon metadata
 - Required `out.bundle` and `out.version`
