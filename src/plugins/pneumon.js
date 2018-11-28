@@ -70,6 +70,7 @@ module.exports = {
       delete config.justMeta
 
       out.script.push(`
+  const Pneumon = require('pneumon')
   global._PNEUMON = ${JSON.stringify(config).replace('@FILE', out.bundle.getFile)}
 `)
     }
