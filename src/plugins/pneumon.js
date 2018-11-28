@@ -28,9 +28,7 @@ module.exports = {
       throw new Error('Pneumon mod needs bundler')
     }
 
-    if (config.justMeta) {
-      delete config.justMeta
-
+    if (!config.justMeta) {
       out.script.push(`
 
   const Pneumon = require('pneumon')
@@ -69,6 +67,8 @@ module.exports = {
   `)
       }
     } else {
+      delete config.justMeta
+
       out.script.push(`
   global._PNEUMON = ${JSON.stringify(config).replace('@FILE', out.bundle.getFile)}
 `)
